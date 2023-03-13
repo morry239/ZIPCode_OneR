@@ -117,23 +117,19 @@ public class OneR
 
     public void Build(StreamReader r)
     {
-        /*string filePath = @"/Users/mamikawamura/Downloads/sonnencreme.csv";
+        string filePath = @"/Users/sonnencreme.csv";
         using FileStream fs = File.Create(filePath); //applied FileStream
-        r = new StreamReader(fs);*/
+        r = new StreamReader(fs);
         var list = new List<ItemSet>();
-
-        
-            r = new StreamReader("/Users/mamikawamura/Desktop/geo-data.csv");
-        
             
         var header = r.ReadLine().Split(new char[] { ';' });
-            // Spaltenüberschriften lesen
+            // read the headers
         foreach (string head in header)
         { 
             list.Add(new ItemSet(head));
         }
 
-        // Daten einlesen und Häufigkeiten ermitteln
+        // read data and return frequency rates
         string line = r.ReadLine();
 
         while (line != null)
@@ -152,15 +148,12 @@ public class OneR
         }
         r.Close();
 
-        // Gruppen mit bester Vorhersage pro Spalte ermitteln
+        // GReturn the groups with the best predictions
         foreach (ItemSet items in list)
-            // vorher: Ausgabe alle Häufigkeitsverteilungen
-            // Console.WriteLine(items);
-            // nacher: Ausgabe bester Häufigkeitsverteilungen
-            // Console.WriteLine(items);
+            
             items.Process();
 
-        // Spalte mit geringster Fehlerrate ermitteln
+        // return the column with the lowest frequency rates
         var result = (from items in list
                       where !double.IsNaN(items.ErrorRate)
                       orderby items.ErrorRate
@@ -168,7 +161,7 @@ public class OneR
 
         ItemSet solution = result.First();
 
-        // Lösung für Vorhersage speichern
+        // store a solution for predictions
         foreach (Item item in solution.Items.Values)
             Solution.Add(item.Attribute, item.Classification);
 
